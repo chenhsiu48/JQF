@@ -1,6 +1,6 @@
 # JQF: JPEG Quantization Table Fusion
 
-This repository contains the JPEG quantization table fusion code and pretrained weights for the paper [JQF: Optimal JPEG Quantization Table Fusion by Simulated Annealing on Texture Images and Predicting Textures](https://arxiv.org/abs/2008.05672). 
+This repository contains the JPEG quantization table fusion code and pretrained model for the paper [JQF: Optimal JPEG Quantization Table Fusion by Simulated Annealing on Texture Images and Predicting Textures](https://arxiv.org/abs/2008.05672). 
 
 > This work tries to solve the dilemma of balancing between computational cost and image specific optimality by introducing a new concept of texture mosaic images. Instead of optimizing a single image or a collection of representative images, the simulated annealing technique is applied to texture mosaic images to search for an optimal quantization table for each texture category. We use pre-trained VGG-16 CNN model to learn those texture features and predict the new image's texture distribution, then fuse optimal texture tables to come out with an image specific optimal quantization table. On the Kodak dataset with the quality setting Q=95, our experiment shows a size reduction of 23.5% over the JPEG standard table with a slightly 0.35% FSIM decrease, which is visually unperceivable. The proposed JQF method achieves per image optimality for JPEG encoding with less than one second additional timing cost. The online demo is available at https://matthorn.s3.amazonaws.com/JQF/qtbl_vis.html.
 
@@ -24,6 +24,12 @@ $ pip install -r requirements.txt
 ```
 
 ## Usage
+
+First download the pretrained weights with:
+
+```
+$ wget -P data/ https://matthorn.s3-ap-northeast-1.amazonaws.com/JQF/JQF-Texture.pth
+```
 
 Simply execute the script ```predict.py``` with a list of images to encode, defaults to JPEG quality at Q=80. This program predicts the input image's texture distribution first, then fuses a per image optimized quantization table at targeted quality. 
 
