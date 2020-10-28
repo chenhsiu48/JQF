@@ -73,7 +73,7 @@ def exec_encode(args):
     model.eval()
     with torch.no_grad():
         for img_name in args.images:
-            pred_name = utils.make_filepath(img_name, ext_name='jpg', tag=f'{args.quality}-predict')
+            pred_name = utils.make_filepath(img_name, dir_name=args.output, ext_name='jpg', tag=f'{args.quality}-jqf')
 
             im = Image.open(img_name)
             all_patches = non_overlap_crop(im)
@@ -105,7 +105,7 @@ def exec_encode(args):
 
             std_chroma_scaled = utils.scale_qtable(std_chroma, args.quality)
 
-            im.save(pred_name, quality=utils.quality_to_scale(50), qtables=[fuse_luma_scaled, std_chroma_scaled])
+            im.save(pred_name, subsampling=args.subsampling, quality=utils.quality_to_scale(50), qtables=[fuse_luma_scaled, std_chroma_scaled])
             pred_size = os.path.getsize(pred_name)
             print(f'save {pred_name}, {pred_size} bytes')
 
@@ -115,6 +115,8 @@ if __name__ == '__main__':
     parser.add_argument('images', nargs='+', help='images')
     parser.add_argument('--model', default='./data/JQF-Texture.pth', type=str, help='texture model')
     parser.add_argument('--qtable', default='./data/JQF-qtables.txt', type=str, help='optimized qtables')
+    parser.add_argument('--output', '-o', dest='output', default='.', type=str, help='output folder')
+    parser.add_argument('--subsampling', default='4:2:0', type=str, help='JPEG subsampling')
     parser.add_argument('--quality', '-q', default=80, type=int, help='JPEG encoding quality metric')
     args = parser.parse_args()
     exec_encode(args)
