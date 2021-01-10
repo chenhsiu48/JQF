@@ -73,6 +73,7 @@ def exec_encode(args):
     model.eval()
     with torch.no_grad():
         for img_name in args.images:
+            std_name = utils.make_filepath(img_name, dir_name=args.output, ext_name='jpg', tag=f'{args.quality}-std')
             pred_name = utils.make_filepath(img_name, dir_name=args.output, ext_name='jpg', tag=f'{args.quality}-jqf')
 
             im = Image.open(img_name)
@@ -105,9 +106,12 @@ def exec_encode(args):
 
             std_chroma_scaled = utils.scale_qtable(std_chroma, args.quality)
 
+            im.save(std_name, subsampling=args.subsampling, quality=args.quality)
+            std_size = os.path.getsize(std_name)
+            print(f'encode {std_name} using standard table, {std_size} bytes')
             im.save(pred_name, subsampling=args.subsampling, quality=utils.quality_to_scale(50), qtables=[fuse_luma_scaled, std_chroma_scaled])
             pred_size = os.path.getsize(pred_name)
-            print(f'save {pred_name}, {pred_size} bytes')
+            print(f'encode {pred_name} with fused optimized table, {pred_size} bytes, {100*(std_size-pred_size)/std_size:.2f}% size reduction')
 
 
 if __name__ == '__main__':

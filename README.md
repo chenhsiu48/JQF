@@ -63,7 +63,8 @@ scaled table at Q=95
    6    8    9   10   11   12   12   11 
    9   10   10   10   11   10   11   11 
 
-save ./lighthouse-95-jqf.jpg, 107502 bytes
+encode ./lighthouse-95-std.jpg using standard table, 149035 bytes
+encode ./lighthouse-95-jqf.jpg with fused optimized table, 107502 bytes, 27.87% size reduction
 ```
 
 There are two sets of texture quantization tables optimized at Q=50 and Q=95, named ```JQF-qtables-50.txt``` and ```JQF-qtables-95.txt``` under folder ```data/```. As shown in the paper, direct scale original annealed Q to different Q at encoding time is not optimal and will introduce visible artifact at low bitrate. Therefore we choose Q=50 as a compromise for a wide range of application scenarios and report the rate-distortion curve of ```lighthouse.png``` in the paper. However, since it is common to encode JPEG as a high-quality image, we set our default to use Q=95 optimized tables for its best bitrate saving. 
@@ -78,6 +79,8 @@ $ python3 predict.py --qtable data/JQF-qtables-50.txt image/r69076d90t.png
 ## Performance
 
 ### Rate-distortion Curves
+
+The below RD-curves are generated using qtables optimized at Q=50 and scaled to target quality ranging from 35 to 95. 
 
 #### lighthouse
 
